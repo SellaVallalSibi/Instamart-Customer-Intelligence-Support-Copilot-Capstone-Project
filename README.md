@@ -92,7 +92,7 @@ Data cleaning and database
 - Created SQLite tables for customers, products, and orders.
 
 Validation results:
-|-------------------------|-------------------|
+
 |       Check             |    Result         |
 |-------------------------|-------------------|
 |Customers                |    1,200          |
@@ -102,7 +102,7 @@ Validation results:
 |Cancelled orders         |    1,199          |
 |Pending orders remaining |        0          |
 |Completed-order revenue  | INR 2,998,668.80  |
-|-------------------------|-------------------|
+
 
 SQL and exploratory analysis:
 sql/queries.sql contains seven queries covering customer order thresholds, revenue by city and category, above-average product prices, customers without completed orders, above-average spend, ranking functions, and cumulative daily revenue.
@@ -116,14 +116,12 @@ Completed-order revenue was highest in Hyderabad at INR 528,589.90, followed by 
 Customer segmentation:
 src/part_b_segments.py calculates recency, frequency, and monetary value from completed orders, scales the features, and evaluates K-means values from K=2 through K=8. The selected K=4 solution produces these segments:
 
-|---------|------------|-----------------------|-----------------|-----------------------------|
 |Segment  |  Customers |   Mean recency (days) |  Mean frequency |  Mean monetary value (INR)  |
 |---------|------------|-----------------------|-----------------|-----------------------------|
 |Regular  |     436    |         28.86         |        3.77     |           1,057.62          |
 |Premium  |     138    |         24.12         |        6.77     |           7,129.70          |
 |Loyal    |     419    |          8.77         |       19.40     |           3,410.02          |
 |At-Risk  |     182    |        109.04         |        2.20     |             685.99          |
-|---------|------------|-----------------------|-----------------|-----------------------------|
 
 PCA explains approximately 85.2% of the standardized feature variance in its first two components.
 
@@ -132,14 +130,12 @@ Output: outputs/customer_segments.csv.
 Lapse prediction:
 The lapse model uses pre-cutoff customer behavior to predict whether a customer has no completed order in September 2025. The data is split into stratified training and test sets, with preprocessing fitted on training data only. Logistic Regression and Random Forest are tuned using cross-validation.
 
-|-----------------------|---------------------|----------------|
 |Metric                 | Logistic-Regression |  Random Forest |
 |-----------------------|---------------------|----------------|
 |Test accuracy          |        0.763        |      0.772     |
 |Lapsed-class precision |        0.655        |      0.680     |
 |Lapsed-class recall    |        0.809        |      0.764     |
 |Lapsed-class F1        |        0.724        |      0.720     |
-|-----------------------|---------------------|----------------|
 
 The baseline that predicts every customer will stay has 61.6% accuracy and zero F1 for the lapsed class. Logistic Regression was selected based on the measured test F1.
 
@@ -151,7 +147,6 @@ The retention list ranks Premium customers by predicted lapse probability and in
 ## Part C
 The ticket triage pipeline redacts email addresses, phone numbers, and order IDs before sending ticket text to the offline mock model. It tests zero-shot and few-shot prompts, validates JSON responses, uses a keyword fallback for some invalid outputs, retries transient errors, and routes tickets according to category and customer segment.
 
-|-----------------------------------|--------------|------------|
 |Measure                            |  Zero-shot   |  Few-shot  |
 |-----------------------------------|--------------|------------|
 |Classified tickets                 |   147 / 164  |  147 / 164 |
@@ -159,7 +154,6 @@ The ticket triage pipeline redacts email addresses, phone numbers, and order IDs
 |Accuracy among classified tickets  |    85.71%    |    100%    |
 |Tokens used                        |    9,556     |   19,540   |
 |Retry events                       |      19      |     19     |
-|-----------------------------------|--------------|------------|
 
 The final triage statuses were 135 valid JSON classifications, 12 keyword classifications, 9 invalid-output flags, 4 empty-ticket skips, and 4 long-ticket flags.
 
@@ -194,7 +188,6 @@ The ReAct-style agent uses five tools:
 
 All seven supplied scenarios produced their expected outcome:
 
-|---------|------------|---------------------------|
 |Scenario |  Expected  |      Observed             |
 |---------|------------|---------------------------|
 |  S1     |   REFUND   |       REFUND              |
@@ -204,7 +197,6 @@ All seven supplied scenarios produced their expected outcome:
 |  S5     |   DENIED   |       DENIED              |
 |  S6     |  NOT_FOUND |      NOT_FOUND            |
 |  S7     |  FALLBACK  |   FALLBACK_MAX_ITERATIONS |
-|---------|------------|---------------------------|
 
 The stop-condition tests produced FALLBACK_TOKEN_LIMIT and FALLBACK_TIMEOUT. The loop scenario reached FALLBACK_MAX_ITERATIONS.
 
